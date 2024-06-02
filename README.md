@@ -36,7 +36,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-- uses: flutter-actions/setup-flutter@v2
+    - uses: flutter-actions/setup-flutter@v2
       with:
         version: ${{ matrix.flutter }}
         channel: stable
