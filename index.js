@@ -1,12 +1,10 @@
 const fs = require("node:fs")
-const fetch = require('node-fetch');
+const path = require("node:path")
 const semver = require('semver');
 const YAML = require("yaml")
 const core = require('@actions/core');
 const tc = require('@actions/tool-cache');
-const github = require('@actions/github');
 const { compareVersions } = require('compare-versions');
-const { version } = require("node:os");
 
 const runner = {
   os: process.env['RUNNER_OS'] ?? 'linux',
@@ -19,11 +17,20 @@ const parseStrictInput= (strict = "false") => {
 
 async function main() {
   const inputs = {
+    pubspec: core.getInput('pubspec') || './pubspec.yaml',
     strict: parseStrictInput(core.getInput('strict')),
   }
 
+  // Print the input variables
+  if (inputs.strict) {
+    core.info("Strict mode is enabled")
+  }
+
   // Parse pubspec.yaml file
-  const file = fs.readFileSync('./pubspec.yaml', 'utf8')
+  const pubspecFile = path.resolve(inputs.pubspec)
+  core.info("Parsing pubspec.yaml file: " + pubspecFile)
+
+  const file = fs.readFileSync(pubspecFile, 'utf8')
   const Pubspec = YAML.parse(file)
 
   // Check if the pubspec.yaml file contains the environment key
@@ -31,17 +38,13 @@ async function main() {
     core.setFailed("The pubspec.yaml file does not contain the environment key")
     return
   }
-  if (!Pubspec.environment.sdk) {
+  if (inputs.strict && !Pubspec.environment.sdk) {
     core.warning("The pubspec.yaml file does not contain the environment.sdk key for Dart SDK")
+    return
   }
   if (!Pubspec.environment.flutter) {
     core.setFailed("The pubspec.yaml file does not contain the environment.flutter key for Flutter SDK")
     return
-  }
-
-  // Print the input variables
-  if (inputs.strict) {
-    core.info("Strict mode is enabled")
   }
 
   core.info("Pubspec environment:")
@@ -87,7 +90,7 @@ async function main() {
     }
 
     // Check if the release satisfies the Dart SDK version constraint in the pubspec.yaml file
-    if (release.dart_sdk_version) {
+    if (Pubspec.environment.sdk && release.dart_sdk_version) {
       if (inputs.strict && !semver.satisfies(release.dart_sdk_version, Pubspec.environment.sdk)) {
         core.info(`Skipping Dart SDK version: (v${release.dart_sdk_version}), the version does not satisfy the constraint in the pubspec.yaml file`)
         continue
@@ -97,20 +100,27 @@ async function main() {
     }
 
     core.info(__message)
+    __message = "" // Reset the message
   }
 
   // Remove duplicates and empty matrix
   for (const key in matrix) {
     const items = matrix[key]
     if (items.length === 0) {
+      // Remove the key from the matrix to avoid empty arrays which will cause the job to fail
       delete matrix[key]
     } else {
-      matrix[key] = Array.from(new Set(matrix[key]))
+      // Doing some cleanup
+      matrix[key] = Array
+                    .from(new Set(matrix[key])) // Remove duplicates
+                    .sort(compareVersions) // Sort the versions
     }
   }
 
+
+  // Show a summary of the matrix
   core.info("")
-  core.info("Matrix:")
+  core.info("Matrix summary:")
   core.info(JSON.stringify({ matrix }, null, 2))
 
   // Set the output variables

@@ -1,39 +1,24 @@
-name: 'release-matrix-action'
-description: 'GitHub Action to generate matrix using "endoflife-date/release-data" dataset'
+name: 'Generate matrix from pubspec.yamlaction'
+description: 'GitHub Action to generates a matrix of Dart and Flutter SDK versions from a pubspec.yaml file'
 branding:
   icon: 'tag'
   color: 'white'
 inputs:
-  search:
-    description: 'The search keyword for release data'
-    required: true
-  date:
-    description: 'Set the filter for the release by date, e.g: 2023-01-01, 2023'
+  pubspec:
+    description: 'The path to the pubspec.yaml file'
     required: false
-  version:
-    description: 'Set the filter for the release by version, e.g: 1.0'
-    required: false
-  limit:
-    description: 'Set the limit for the number of releases to output, default: 3'
-    required: false
+    default: 'pubspec.yaml'
   strict:
-    description: 'Enable strict mode for the search, will throw if no release were found. default: false'
+    description: 'If true, the action will assert constraints on the Dart SDK version bundled with the Flutter SDK to ensure compatibility. Default: false'
     required: false
     default: "false"
-  source-repo:
-    description: 'The source repository to fetch the data from, default: "endoflife-date/release-data"'
-    required: false
-    default: "endoflife-date/release-data"
-  source-branch:
-    description: 'The source branch to fetch the data from, default: "main"'
-    required: false
 outputs:
   matrix:
     description: 'The `matrix` data'
   releases:
-    description:  'The `matrix.release`` data'
+    description:  'The `matrix.dart`` data'
   versions:
-    description:  'The `matrix.versions` data'
+    description:  'The `matrix.flutter` data'
 runs:
   using: 'node20'
   main: 'dist/index.js'
