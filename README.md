@@ -7,6 +7,19 @@
 # About
 This [GitHub Action] generates a matrix of Dart and Flutter SDK versions from a `pubspec.yaml` file.
 
+## Inputs
+
+The action takes the following inputs:
+  * `pubspec`: The path to the pubspec.yaml file. Default: `pubspec.yaml`.
+  * `channel`: The Flutter channel to use when resolving the Flutter SDK version. Default: `any`
+  * `strict`: If `true`, the action will assert constraints on the Dart SDK version bundled with the Flutter SDK to ensure compatibility. Default: `false`
+
+## Outputs
+
+- `matrix`: A JSON string representing the matrix of both Dart and Flutter SDK versions.
+- `dart`: The Dart SDK specific versions.
+- `flutter`: The Flutter SDK specific versions.
+
 ## Usage
 ```yaml
 name: test
