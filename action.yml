@@ -8,6 +8,10 @@ inputs:
     description: 'The path to the pubspec.yaml file'
     required: false
     default: 'pubspec.yaml'
+  channel:
+    description: 'The Flutter channel to use when resolving the Flutter SDK version. Default: any'
+    required: false
+    default: 'any'
   strict:
     description: 'If true, the action will assert constraints on the Dart SDK version bundled with the Flutter SDK to ensure compatibility. Default: false'
     required: false

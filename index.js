@@ -18,6 +18,7 @@ const parseStrictInput= (strict = "false") => {
 async function main() {
   const inputs = {
     pubspec: core.getInput('pubspec') || './pubspec.yaml',
+    channel: core.getInput('channel') || 'any',
     strict: parseStrictInput(core.getInput('strict')),
   }
 
@@ -72,7 +73,7 @@ async function main() {
   for (const release of flutterReleaseManifest.releases) {
     // Check if the release satisfied the channel constraint, if any is provided process all releases
     // Otherwise, only process releases that match the specified channel
-    if (inputs.channel !== 'any') {
+    if (inputs.channel && inputs.channel !== 'any') {
       if (release.channel !== inputs.channel) {
         continue
       }
