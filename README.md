@@ -46,6 +46,13 @@ jobs:
 
 ```
 
+**Example**
+
+<picture>
+    <source srcset=".github/assets/screenshot-dark.png"  media="(prefers-color-scheme: dark)">
+    <img src=".github/assets/screenshot-light.png">
+</picture>
+
 # License
 
 Licensed under the [MIT License].
