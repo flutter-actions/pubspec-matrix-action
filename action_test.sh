@@ -1,5 +1,5 @@
 #!/bin/bash
-export ACTION_TEST_DIR="$(pwd)/.setup-flutter"
+export ACTION_TEST_DIR="$(pwd)/.pubspec-matrix-action"
 
 # Runner environment variables
 export RUNNER_TOOL_CACHE="$ACTION_TEST_DIR/tool_cache"
