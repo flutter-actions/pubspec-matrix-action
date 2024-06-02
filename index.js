@@ -7,8 +7,8 @@ const tc = require('@actions/tool-cache');
 const { compareVersions } = require('compare-versions');
 
 const runner = {
-  os: process.env['RUNNER_OS'] ?? 'linux',
-  arch: process.env['RUNNER_ARCH'] ?? 'x64'
+  os: String(process.env['RUNNER_OS'] ?? 'linux').toLowerCase(),
+  arch: String(process.env['RUNNER_ARCH'] ?? 'x64').toLowerCase(),
 }
 
 const parseStrictInput= (strict = "false") => {

@@ -41893,8 +41893,8 @@ const tc = __nccwpck_require__(5561);
 const { compareVersions } = __nccwpck_require__(9329);
 
 const runner = {
-  os: process.env['RUNNER_OS'] ?? 'linux',
-  arch: process.env['RUNNER_ARCH'] ?? 'x64'
+  os: String(process.env['RUNNER_OS'] ?? 'linux').toLowerCase(),
+  arch: String(process.env['RUNNER_ARCH'] ?? 'x64').toLowerCase(),
 }
 
 const parseStrictInput= (strict = "false") => {
