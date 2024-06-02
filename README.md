@@ -18,7 +18,7 @@ jobs:
   pubspec:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
 
     - id: pubspec
       name: Generate matrix from pubspec.yaml
@@ -32,9 +32,9 @@ jobs:
     needs: pubspec
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{fromJson(needs.triage.outputs.matrix)}}
+      matrix: ${{fromJson(needs.pubspec.outputs.matrix)}}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
 
     - uses: flutter-actions/setup-flutter@v2
       with:
