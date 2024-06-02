@@ -1,4 +1,7 @@
+# This is a test artifact that is used to generate a matrix of Flutter versions from a pubspec.yaml file.
+
+name: test
+
 environment:
-  sdk: 3.0.0
+  sdk: ^3.4.0
   flutter: '^3.22.0'
-  # flutter: '>= 3.22.0'
