@@ -41893,8 +41893,8 @@ const tc = __nccwpck_require__(5561);
 const { compareVersions } = __nccwpck_require__(9329);
 
 const runner = {
-  os: String(process.env['RUNNER_OS'] ?? 'linux').toLowerCase(),
-  arch: String(process.env['RUNNER_ARCH'] ?? 'x64').toLowerCase(),
+  os: process.env['RUNNER_OS'] || 'Linux',
+  arch: process.env['RUNNER_ARCH'] || 'x64',
 }
 
 const parseStrictInput= (strict = "false") => {
@@ -41910,7 +41910,7 @@ async function main() {
   const inputs = {
     pubspec: core.getInput('pubspec') || './pubspec.yaml',
     channel: core.getInput('channel') || 'any',
-    platform: core.getInput('platform') || runner.os,
+    platform: String(core.getInput('platform') || runner.os).toLowerCase(),
     strict: parseStrictInput(core.getInput('strict')),
   }
 
