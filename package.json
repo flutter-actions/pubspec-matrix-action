@@ -38,5 +38,6 @@
     "@vercel/ncc": "^0.38.1",
     "eslint": "^9.3.0",
     "jest": "^29.7.0"
-  }
+  },
+  "packageManager": "pnpm@9.1.4"
 }
