@@ -15,14 +15,13 @@ jobs:
       with:
         pubspec: 'pubspec.yaml'
     outputs:
-      flutter: ${{ steps.pubspec.outputs.flutter }}
+      matrix: ${{ steps.pubspec.outputs.matrix }}
 
   test:
     needs: pubspec
     runs-on: ubuntu-latest
     strategy:
-      matrix:
-        flutter: ${{fromJson(needs.pubspec.outputs.flutter)}}
+      matrix: ${{fromJson(needs.pubspec.outputs.matrix)}}
     steps:
     - uses: flutter-actions/setup-flutter@v3
       with:
