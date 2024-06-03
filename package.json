@@ -30,7 +30,6 @@
     "@actions/github": "^6.0.0",
     "@actions/tool-cache": "^2.0.1",
     "compare-versions": "^6.1.0",
-    "node-fetch": "^2.6.12",
     "semver": "^7.6.2",
     "yaml": "^2.4.2"
   },
