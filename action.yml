@@ -1,8 +1,8 @@
 name: 'Generate matrix from pubspec.yamlaction'
 description: 'GitHub Action to generates a matrix of Dart and Flutter SDK versions from a pubspec.yaml file'
 branding:
-  icon: 'tag'
-  color: 'white'
+  icon: "triangle"
+  color: "blue"
 inputs:
   pubspec:
     description: 'The path to the pubspec.yaml file'
