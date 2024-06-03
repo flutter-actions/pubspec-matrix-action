@@ -23,9 +23,9 @@ inputs:
 outputs:
   matrix:
     description: 'The `matrix` data'
-  releases:
+  dart:
     description:  'The `matrix.dart`` data'
-  versions:
+  flutter:
     description:  'The `matrix.flutter` data'
 runs:
   using: 'node20'
