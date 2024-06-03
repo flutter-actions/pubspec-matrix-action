@@ -41910,6 +41910,7 @@ async function main() {
   const inputs = {
     pubspec: core.getInput('pubspec') || './pubspec.yaml',
     channel: core.getInput('channel') || 'any',
+    platform: core.getInput('platform') || runner.os,
     strict: parseStrictInput(core.getInput('strict')),
   }
 
@@ -41992,7 +41993,7 @@ async function main() {
         __message += `, Dart SDK version: (v${release.version})`
       }
   
-      core.info(`${__message} the version satisfies the constraints in the pubspec.yaml file`)
+      core.info(`${__message} satisfies the constraints in the "pubspec.yaml" file`)
       __message = "" // Reset the message
     }
   })

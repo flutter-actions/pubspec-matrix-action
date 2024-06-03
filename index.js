@@ -24,6 +24,7 @@ async function main() {
   const inputs = {
     pubspec: core.getInput('pubspec') || './pubspec.yaml',
     channel: core.getInput('channel') || 'any',
+    platform: core.getInput('platform') || runner.os,
     strict: parseStrictInput(core.getInput('strict')),
   }
 
