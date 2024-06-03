@@ -41992,7 +41992,7 @@ async function main() {
         __message += `, Dart SDK version: (v${release.version})`
       }
   
-      core.info(__message)
+      core.info(`${__message} the version satisfies the constraints in the pubspec.yaml file`)
       __message = "" // Reset the message
     }
   })
