@@ -25,6 +25,7 @@ The action takes the following inputs:
 - `flutter`: The Flutter SDK specific versions.
 
 ## Usage
+
 ```yaml
 name: test
 
@@ -55,12 +56,68 @@ jobs:
 
     - uses: flutter-actions/setup-flutter@v2
       with:
-        version: ${{ matrix.flutter }}
+        version: ${{ matrix.release.flutter }}
         channel: stable
 
     - run: flutter pub get
     - run: flutter test
+```
 
+**Or with Dart SDK version only:**
+
+```yaml
+# ...
+jobs:
+  pubspec:
+    # ...
+    - id: pubspec
+      name: Generate matrix from pubspec.yaml
+      uses: flutter-actions/pubspec-matrix-action@v1
+      with:
+        pubspec: 'pubspec.yaml'
+    outputs:
+      dart: ${{ steps.pubspec.outputs.dart }}
+
+  test:
+    needs: pubspec
+    # ...
+    strategy:
+      dart: ${{fromJson(needs.pubspec.outputs.dart)}}
+    steps:
+    # ...
+    - uses: dart-lang/setup-dart@v1
+      with:
+        sdk: ${{ matrix.dart }}
+    # ...
+```
+
+**Or with Flutter SDK version only:**
+
+```yaml
+# ...
+jobs:
+  pubspec:
+    # ...
+    - id: pubspec
+      name: Generate matrix from pubspec.yaml
+      uses: flutter-actions/pubspec-matrix-action@v1
+      with:
+        pubspec: 'pubspec.yaml'
+    outputs:
+      flutter: ${{ steps.pubspec.outputs.flutter }}
+
+  test:
+    needs: pubspec
+    # ...
+    strategy:
+      flutter: ${{fromJson(needs.pubspec.outputs.flutter)}}
+    steps:
+    # ...
+    - uses: flutter-actions/setup-flutter@v2
+      with:
+        version: ${{ matrix.flutter }}
+        channel: stable
+    # ...
 ```
 
 **Example**
