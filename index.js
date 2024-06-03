@@ -152,7 +152,7 @@ async function main() {
   await core.group("Matrix summary", () => core.info(JSON.stringify(outputs, null, 2)))
 
   // Set the output variables
-  core.setOutput('matrix', JSON.stringify(outputs))
+  core.setOutput('matrix', JSON.stringify({ matrix: outputs.matrix }))
   if ('dart' in outputs) {
     core.setOutput('dart', JSON.stringify(outputs.dart))
   }

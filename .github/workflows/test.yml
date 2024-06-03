@@ -20,8 +20,7 @@ jobs:
   test:
     needs: pubspec
     runs-on: ubuntu-latest
-    strategy:
-      matrix: ${{fromJson(needs.pubspec.outputs.matrix)}}
+    strategy: ${{fromJson(needs.pubspec.outputs.matrix)}}
     steps:
     - uses: flutter-actions/setup-flutter@v3
       with:
