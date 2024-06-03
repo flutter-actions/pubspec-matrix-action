@@ -41979,7 +41979,7 @@ async function main() {
         }
       }
   
-      let __message = "-"
+      const msg = []
   
       // Check if the release satisfies the version constraint in the pubspec.yaml file
       if (release.version) {
@@ -41987,7 +41987,7 @@ async function main() {
           continue
         }
         matrix.flutter.push(release.version)
-        __message += ` Flutter SDK version: (v${release.version}, ${release.channel})`
+        msg.push(`Flutter SDK version: (v${release.version}, ${release.channel})`)
       }
   
       // Check if the release satisfies the Dart SDK version constraint in the pubspec.yaml file
@@ -41997,28 +41997,29 @@ async function main() {
           continue
         }
         matrix.dart.push(release.dart_sdk_version)
-        __message += `, Dart SDK version: (v${release.version})`
+        msg.push(`Dart SDK version: (v${release.version})`)
       }
   
-      core.info(`${__message} satisfies the constraints in the "pubspec.yaml" file`)
-      __message = "" // Reset the message
+      core.info(`- ${msg.join(", ")} satisfies the constraints in the "pubspec.yaml" file`)
     }
   })
 
   // Remove duplicates and empty matrix
   for (const key in matrix) {
-    await core.group(`Post-processing for ${labelsMap[key]}`, async () => {
-      const items = matrix[key]
-      if (items.length === 0) {
-        core.info(`- Remove the "${key}" from the matrix to avoid empty arrays which will cause the job to fail`)
-        delete matrix[key]
-      } else {
-        core.info("- Removing duplicates and sorting the versions")
-        matrix[key] = Array
-                      .from(new Set(matrix[key])) // Remove duplicates
-                      .sort(compareVersions) // Sort the versions
-      }
-    })
+    if (Object.hasOwnProperty.call(matrix, key)) {
+      await core.group(`Post-processing for ${labelsMap[key]}`, async () => {
+        const items = matrix[key]
+        if (items.length === 0) {
+          core.info(`- Remove the "${key}" from the matrix to avoid empty arrays which will cause the job to fail`)
+          delete matrix[key]
+        } else {
+          core.info("- Removing duplicates and sorting the versions")
+          matrix[key] = Array
+                        .from(new Set(matrix[key])) // Remove duplicates
+                        .sort(compareVersions) // Sort the versions
+        }
+      })
+    }
   }
 
 
@@ -42027,8 +42028,12 @@ async function main() {
 
   // Set the output variables
   core.setOutput('matrix', JSON.stringify(matrix))
-  core.setOutput('dart', JSON.stringify(matrix.dart))
-  core.setOutput('flutter', JSON.stringify(matrix.flutter))
+  if ('dart' in matrix) {
+    core.setOutput('dart', JSON.stringify(matrix.dart))
+  }
+  if ('flutter' in matrix) {
+    core.setOutput('flutter', JSON.stringify(matrix.flutter))
+  }
 }
 
 main()
