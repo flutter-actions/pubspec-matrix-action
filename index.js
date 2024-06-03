@@ -70,7 +70,8 @@ async function main() {
   const flutterReleaseManifest = JSON.parse(flutterReleaseManifestJson)
 
   // Prepare the matrix for the Dart and Flutter SDK versions
-  const matrix = {
+  const outputs = {
+    matrix: [],
     dart: [],
     flutter: [],
   }
@@ -85,45 +86,62 @@ async function main() {
           continue
         }
       }
-  
+      
       const msg = []
+      let flutter_sdk_version = release.version
+      let dart_sdk_version = release.dart_sdk_version
   
       // Check if the release satisfies the version constraint in the pubspec.yaml file
-      if (release.version) {
-        if (!semver.satisfies(release.version, Pubspec.environment.flutter)) {
+      if (flutter_sdk_version) {
+        if (!semver.satisfies(flutter_sdk_version, Pubspec.environment.flutter)) {
           continue
         }
-        matrix.flutter.push(release.version)
-        msg.push(`Flutter SDK version: (v${release.version}, ${release.channel})`)
+        msg.push(`Flutter SDK version: (v${flutter_sdk_version}, ${release.channel})`)
       }
   
       // Check if the release satisfies the Dart SDK version constraint in the pubspec.yaml file
-      if (Pubspec.environment.sdk && release.dart_sdk_version) {
-        if (inputs.strict && !semver.satisfies(release.dart_sdk_version, Pubspec.environment.sdk)) {
-          core.info(`Skipping Dart SDK version: (v${release.dart_sdk_version}), the version does not satisfy the constraint in the pubspec.yaml file`)
+      if (Pubspec.environment.sdk && dart_sdk_version) {
+        if (inputs.strict && !semver.satisfies(dart_sdk_version, Pubspec.environment.sdk)) {
+          core.info(`Skipping Dart SDK version: (v${dart_sdk_version}), the version does not satisfy the constraint in the pubspec.yaml file`)
           continue
         }
-        matrix.dart.push(release.dart_sdk_version)
-        msg.push(`Dart SDK version: (v${release.version})`)
+        msg.push(`Dart SDK version: (v${flutter_sdk_version})`)
+      } else if (Pubspec.environment.sdk && !dart_sdk_version) {
+        core.warning(`The release ${flutter_sdk_version} does not contain the Dart SDK version information.`)
+        core.warning("Using the exact Dart SDK version from the pubspec.yaml file")
+        dart_sdk_version = Pubspec.environment.sdk.replace(/\^|<=?|>=?/, '')
       }
+
+      // Remove the leading "v" from the versions
+      flutter_sdk_version = flutter_sdk_version.replace(/^v/, '')
+      dart_sdk_version = dart_sdk_version.replace(/^v/, '')
+
+      // Add value to outputs
+      if (!outputs.flutter.includes(flutter_sdk_version)) {
+        outputs.matrix.push({ flutter: flutter_sdk_version, dart: dart_sdk_version })
+      }
+      outputs.flutter.push(flutter_sdk_version)
+      outputs.dart.push(dart_sdk_version)
   
       core.info(`- ${msg.join(", ")} satisfies the constraints in the "pubspec.yaml" file`)
     }
   })
 
   // Remove duplicates and empty matrix
-  for (const key in matrix) {
-    if (Object.hasOwnProperty.call(matrix, key)) {
+  for (const key in outputs) {
+    if (Object.hasOwnProperty.call(outputs, key)) {
       await core.group(`Post-processing for ${labelsMap[key]}`, async () => {
-        const items = matrix[key]
+        const items = outputs[key]
         if (items.length === 0) {
           core.info(`- Remove the "${key}" from the matrix to avoid empty arrays which will cause the job to fail`)
-          delete matrix[key]
+          delete outputs[key]
         } else {
-          core.info("- Removing duplicates and sorting the versions")
-          matrix[key] = Array
-                        .from(new Set(matrix[key])) // Remove duplicates
-                        .sort(compareVersions) // Sort the versions
+          if (key !== 'matrix') {
+            core.info("- Removing duplicates and sorting the versions")
+            outputs[key] = Array
+              .from(new Set(outputs[key])) // Remove duplicates
+              .sort(compareVersions) // Sort the versions
+          }
         }
       })
     }
@@ -131,15 +149,15 @@ async function main() {
 
 
   // Show a summary of the matrix
-  await core.group("Matrix summary", () => core.info(JSON.stringify({ matrix }, null, 2)))
+  await core.group("Matrix summary", () => core.info(JSON.stringify(outputs, null, 2)))
 
   // Set the output variables
-  core.setOutput('matrix', JSON.stringify(matrix))
-  if ('dart' in matrix) {
-    core.setOutput('dart', JSON.stringify(matrix.dart))
+  core.setOutput('matrix', JSON.stringify(outputs))
+  if ('dart' in outputs) {
+    core.setOutput('dart', JSON.stringify(outputs.dart))
   }
-  if ('flutter' in matrix) {
-    core.setOutput('flutter', JSON.stringify(matrix.flutter))
+  if ('flutter' in outputs) {
+    core.setOutput('flutter', JSON.stringify(outputs.flutter))
   }
 }
 
