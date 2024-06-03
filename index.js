@@ -85,7 +85,7 @@ async function main() {
         }
       }
   
-      let __message = "  -"
+      let __message = "-"
   
       // Check if the release satisfies the version constraint in the pubspec.yaml file
       if (release.version) {
@@ -116,10 +116,10 @@ async function main() {
     await core.group(`Post-processing for ${labelsMap[key]}`, async () => {
       const items = matrix[key]
       if (items.length === 0) {
-        core.info(`Remove the "${key}" from the matrix to avoid empty arrays which will cause the job to fail`)
+        core.info(`- Remove the "${key}" from the matrix to avoid empty arrays which will cause the job to fail`)
         delete matrix[key]
       } else {
-        core.info("Removing duplicates and sorting the versions")
+        core.info("- Removing duplicates and sorting the versions")
         matrix[key] = Array
                       .from(new Set(matrix[key])) // Remove duplicates
                       .sort(compareVersions) // Sort the versions
