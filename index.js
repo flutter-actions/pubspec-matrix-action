@@ -71,7 +71,7 @@ async function main() {
 
   // Prepare the matrix for the Dart and Flutter SDK versions
   const outputs = {
-    matrix: [],
+    release: [],
     dart: [],
     flutter: [],
   }
@@ -118,7 +118,7 @@ async function main() {
 
       // Add value to outputs
       if (!outputs.flutter.includes(flutter_sdk_version)) {
-        outputs.matrix.push({ flutter: flutter_sdk_version, dart: dart_sdk_version })
+        outputs.release.push({ flutter: flutter_sdk_version, dart: dart_sdk_version })
       }
       outputs.flutter.push(flutter_sdk_version)
       outputs.dart.push(dart_sdk_version)
@@ -152,7 +152,7 @@ async function main() {
   await core.group("Matrix summary", () => core.info(JSON.stringify(outputs, null, 2)))
 
   // Set the output variables
-  core.setOutput('matrix', JSON.stringify({ matrix: outputs.matrix }))
+  core.setOutput('matrix', JSON.stringify({ release: outputs.release }))
   if ('dart' in outputs) {
     core.setOutput('dart', JSON.stringify(outputs.dart))
   }

@@ -22,7 +22,7 @@ inputs:
     default: "false"
 outputs:
   matrix:
-    description: 'The `matrix` data (Array<{dart: string, flutter: string}>)'
+    description: 'The `matrix` data (<{ release: {dart: string, flutter: string} }>)'
   dart:
     description:  'The Dart SDK versions (Array<string>)'
   flutter:
