@@ -41946,7 +41946,7 @@ async function main() {
   })
 
   // Download the Flutter release manifest
-  const flutterReleaseManifestUrl = `https://storage.googleapis.com/flutter_infra_release/releases/releases_${runner.os}.json`
+  const flutterReleaseManifestUrl = `https://storage.googleapis.com/flutter_infra_release/releases/releases_${inputs.platform}.json`
   core.info("Downloading Flutter release manifest from: " + flutterReleaseManifestUrl)
   const flutterReleaseManifestFile = await tc.downloadTool(flutterReleaseManifestUrl).catch((error) => {
     core.setFailed(`Failed to download Flutter release manifest: ${error}`)
