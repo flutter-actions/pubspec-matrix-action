@@ -41939,9 +41939,9 @@ async function main() {
     return
   }
 
-  core.group("pubspec.yaml", () => {
-    if (Pubspec.environment.sdk) core.info(`  - Dart SDK version: ${Pubspec.environment.sdk}`)
-    if (Pubspec.environment.flutter) core.info(`  - Flutter SDK version: ${Pubspec.environment.flutter}`)
+  await core.group("pubspec.yaml", () => {
+    if (Pubspec.environment.sdk) core.info(`- Dart SDK version: ${Pubspec.environment.sdk}`)
+    if (Pubspec.environment.flutter) core.info(`- Flutter SDK version: ${Pubspec.environment.flutter}`)
   })
 
   // Download the Flutter release manifest

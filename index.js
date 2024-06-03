@@ -53,9 +53,9 @@ async function main() {
     return
   }
 
-  core.group("pubspec.yaml", () => {
-    if (Pubspec.environment.sdk) core.info(`  - Dart SDK version: ${Pubspec.environment.sdk}`)
-    if (Pubspec.environment.flutter) core.info(`  - Flutter SDK version: ${Pubspec.environment.flutter}`)
+  await core.group("pubspec.yaml", () => {
+    if (Pubspec.environment.sdk) core.info(`- Dart SDK version: ${Pubspec.environment.sdk}`)
+    if (Pubspec.environment.flutter) core.info(`- Flutter SDK version: ${Pubspec.environment.flutter}`)
   })
 
   // Download the Flutter release manifest
@@ -106,7 +106,7 @@ async function main() {
         __message += `, Dart SDK version: (v${release.version})`
       }
   
-      core.info(__message)
+      core.info(`${__message} the version satisfies the constraints in the pubspec.yaml file`)
       __message = "" // Reset the message
     }
   })
