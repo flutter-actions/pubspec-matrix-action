@@ -31655,6 +31655,14 @@ module.exports = require("node:fs");
 
 /***/ }),
 
+/***/ 612:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("node:os");
+
+/***/ }),
+
 /***/ 9411:
 /***/ ((module) => {
 
@@ -41898,6 +41906,7 @@ const YAML = __nccwpck_require__(9648)
 const core = __nccwpck_require__(9093);
 const tc = __nccwpck_require__(5561);
 const { compareVersions } = __nccwpck_require__(9329);
+const { release } = __nccwpck_require__(612);
 
 const runner = {
   os: process.env['RUNNER_OS'] || 'Linux',
@@ -41909,6 +41918,7 @@ const parseStrictInput= (strict = "false") => {
 }
 
 const labelsMap = {
+  release: "Flutter SDK release matrix",
   dart: "Dart SDK",
   flutter: "Flutter SDK",
 }
@@ -42029,7 +42039,7 @@ async function main() {
           core.info(`- Remove the "${key}" from the matrix to avoid empty arrays which will cause the job to fail`)
           delete outputs[key]
         } else {
-          if (key !== 'matrix') {
+          if (key !== 'release') {
             core.info("- Removing duplicates and sorting the versions")
             outputs[key] = Array
               .from(new Set(outputs[key])) // Remove duplicates

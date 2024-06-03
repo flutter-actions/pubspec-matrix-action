@@ -5,6 +5,7 @@ const YAML = require("yaml")
 const core = require('@actions/core');
 const tc = require('@actions/tool-cache');
 const { compareVersions } = require('compare-versions');
+const { release } = require("node:os");
 
 const runner = {
   os: process.env['RUNNER_OS'] || 'Linux',
@@ -16,6 +17,7 @@ const parseStrictInput= (strict = "false") => {
 }
 
 const labelsMap = {
+  release: "Flutter SDK release matrix",
   dart: "Dart SDK",
   flutter: "Flutter SDK",
 }
@@ -136,7 +138,7 @@ async function main() {
           core.info(`- Remove the "${key}" from the matrix to avoid empty arrays which will cause the job to fail`)
           delete outputs[key]
         } else {
-          if (key !== 'matrix') {
+          if (key !== 'release') {
             core.info("- Removing duplicates and sorting the versions")
             outputs[key] = Array
               .from(new Set(outputs[key])) // Remove duplicates
