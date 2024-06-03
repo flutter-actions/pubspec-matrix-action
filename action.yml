@@ -22,11 +22,11 @@ inputs:
     default: "false"
 outputs:
   matrix:
-    description: 'The `matrix` data'
+    description: 'The `matrix` data (Array<{dart: string, flutter: string}>)'
   dart:
-    description:  'The `matrix.dart`` data'
+    description:  'The Dart SDK versions (Array<string>)'
   flutter:
-    description:  'The `matrix.flutter` data'
+    description:  'The Flutter SDK versions (Array<string>)'
 runs:
   using: 'node20'
   main: 'dist/index.js'
