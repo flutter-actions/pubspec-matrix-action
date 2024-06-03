@@ -1,4 +1,4 @@
-name: 'Generate matrix from pubspec.yamlaction'
+name: 'Generate matrix from pubspec.yaml action'
 description: 'GitHub Action to generates a matrix of Dart and Flutter SDK versions from a pubspec.yaml file'
 branding:
   icon: "triangle"
