@@ -31655,14 +31655,6 @@ module.exports = require("node:fs");
 
 /***/ }),
 
-/***/ 612:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("node:os");
-
-/***/ }),
-
 /***/ 9411:
 /***/ ((module) => {
 
@@ -41906,21 +41898,24 @@ const YAML = __nccwpck_require__(9648)
 const core = __nccwpck_require__(9093);
 const tc = __nccwpck_require__(5561);
 const { compareVersions } = __nccwpck_require__(9329);
-const { release } = __nccwpck_require__(612);
 
 const runner = {
   os: process.env['RUNNER_OS'] || 'Linux',
   arch: process.env['RUNNER_ARCH'] || 'x64',
 }
 
-const parseStrictInput= (strict = "false") => {
-  return strict === "true" ? true : false
-}
-
 const labelsMap = {
   release: "Flutter SDK release matrix",
   dart: "Dart SDK",
   flutter: "Flutter SDK",
+}
+
+const parseStrictInput= (strict = "false") => {
+  return strict === "true" ? true : false
+}
+
+const stripVersionPrefix = (version) => {
+  return version ? version.replace(/^v/, '') : version
 }
 
 async function main() {
@@ -41991,8 +41986,8 @@ async function main() {
       }
       
       const msg = []
-      let flutter_sdk_version = release.version
-      let dart_sdk_version = release.dart_sdk_version
+      let flutter_sdk_version = stripVersionPrefix(release.version)
+      let dart_sdk_version = stripVersionPrefix(release.dart_sdk_version)
   
       // Check if the release satisfies the version constraint in the pubspec.yaml file
       if (flutter_sdk_version) {
@@ -42015,9 +42010,9 @@ async function main() {
         dart_sdk_version = Pubspec.environment.sdk.replace(/\^|<=?|>=?/, '')
       }
 
-      // Remove the leading "v" from the versions
-      flutter_sdk_version = flutter_sdk_version.replace(/^v/, '')
-      dart_sdk_version = dart_sdk_version.replace(/^v/, '')
+      // Attempt to remove the leading "v" from the versions, again!
+      flutter_sdk_version = stripVersionPrefix(flutter_sdk_version)
+      dart_sdk_version = stripVersionPrefix(dart_sdk_version)
 
       // Add value to outputs
       if (!outputs.flutter.includes(flutter_sdk_version)) {
